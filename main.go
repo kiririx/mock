@@ -34,7 +34,11 @@ func init() {
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		resp := apiConf[r.RequestURI[:strings.Index(r.RequestURI, "?")]]
+		url := r.RequestURI
+		if idx := strings.Index(r.RequestURI, "?"); idx >= 0 {
+			url = r.RequestURI[:idx]
+		}
+		resp := apiConf[url]
 		if resp != "" {
 			http.ServeFile(w, r, resp)
 		}
